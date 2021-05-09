@@ -10,17 +10,19 @@ using namespace std;
 
 namespace pandemic {
 
-
+    /* Initialize map with all the cities and no disease cubes */
     Board::Board() {
         for (int i = City::Algiers; i <=City::Washington; i++) {
             num_cubes.insert({City(i), 0});
         }
     }
 
+    /* Override opeator[] in order to put disease cubes in a city */
     int& Board::operator[](const City c) {
         return num_cubes[c];
     }
 
+    /* Checking if all cities are cleared from disease */
     bool Board::is_clean() {
         for (auto& it: num_cubes) {
             if (it.second != 0) {
@@ -30,14 +32,17 @@ namespace pandemic {
         return true;
     }
 
+    /* Remove all cures */
     void Board::remove_cures() {
         cured.clear();
     }
 
+    /* Remove all research stations */
     void Board::remove_stations() {
         research_station.clear();
     }
 
+    /* Override operator<< in order to print out the board */
     ostream& operator<< (ostream& os, const Board& b) {
         for(const auto& t: b.num_cubes) {
             os << "\n\nLevel of disease - \n" << "City: " << city_name(t.first) << "\nLevel: " << t.second;
@@ -54,6 +59,7 @@ namespace pandemic {
         return os;
     }
 
+    /* Checking if one city is connected to another */
     bool Board::isNei(City c1, City c2) {
         for(uint i = 0; i < nei[c1].size(); i++) {
             if (nei.at(c1).at(i) == (int)c2) { 
@@ -63,6 +69,7 @@ namespace pandemic {
         return false;
     }
 
+    /* Initialize connected cities */
     map <City , vector<City>> Board::nei {
         {City::Algiers, {City::Madrid, City::Paris, City::Istanbul, City::Cairo}},
         {City::Atlanta, {City::Chicago, City::Miami, City::Washington}},

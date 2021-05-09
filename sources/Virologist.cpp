@@ -12,6 +12,7 @@ using namespace std;
 
 namespace pandemic {
 
+    /* Virologist can treat any city in the world by dropping its card */
     Player& Virologist::treat(City c) {
         if (city == c) {
             Player::treat(c);

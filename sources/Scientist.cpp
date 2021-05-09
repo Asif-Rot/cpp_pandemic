@@ -12,6 +12,7 @@ using namespace std;
 
 namespace pandemic {
 
+    /* Scientist can discover cure with n cards (initialized in the constructor) */
     Player& Scientist::discover_cure(Color c) {
         int count = 0;
         for(uint i = 0; i < tmp; i++) {

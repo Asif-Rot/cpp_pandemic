@@ -14,7 +14,7 @@ namespace pandemic {
         
         public:
             Board();
-            std::vector<City> research_station; // define here in case of multiple players
+            std::vector<City> research_station;
             std::map<Color, bool> cured;
             int& operator[](const City);
             friend std::ostream& operator<< (std::ostream& os, const Board& b);

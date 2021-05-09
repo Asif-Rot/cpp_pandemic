@@ -14,6 +14,7 @@ namespace pandemic {
 
     const int max_num_cards = 5;
 
+    /* GeneSplicer can discover cure with any 5 cards (with mixed colors) */
     Player& GeneSplicer::discover_cure(Color c) {
         int count = 0;
         for(uint i = 0; i < playcards.size(); i++) {

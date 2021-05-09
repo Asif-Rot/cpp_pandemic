@@ -12,6 +12,7 @@ using namespace std;
 
 namespace pandemic {
 
+    /* If the Dispatcher is at a research station, he is able to fly direct to any city without dropping a card*/
     Player& Dispatcher::fly_direct(City c) {
         if (city == c) {
             throw invalid_argument("You are already in " + city_name(c));

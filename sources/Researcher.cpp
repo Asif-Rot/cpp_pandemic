@@ -14,6 +14,7 @@ namespace pandemic {
 
     const int max_num_cards = 5;
 
+    /* Researcher can discover cure without having to be in a reasearch station */
     Player& Researcher::discover_cure(Color c) {
         int count = 0;
         for(uint i = 0; i < playcards.size(); i++) {

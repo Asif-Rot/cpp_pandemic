@@ -7,7 +7,8 @@
 using namespace std;
 
 namespace pandemic {
-
+    
+    /* FieldDoctor can treat connected cities as well without dropping a card */
     Player& FieldDoctor::treat(City c) {
         if (c == city || Board::isNei(city, c)) {
             if(board[c] == 0) {
