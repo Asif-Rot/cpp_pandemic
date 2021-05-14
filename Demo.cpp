@@ -23,67 +23,34 @@ using namespace std;
 #define RESET       "\033[0m"
 #define RED         "\033[31m"
 #define GREEN       "\033[32m"
+#define CYAN        "\033[36m"
+#define BOLDMAGENTA "\033[1m\033[35m"
 
 void what_role(string rol);
 void what_action(string action);
 void cities_num();
 City int_to_city(int c);
 void take_action(Player& player, string action);
+static int countit;
 
 int main () {
     Board board;
-    vector<string> roles {"Dispatcher", "Scientist", "Researcher", "Medic", "Virologist", "GeneSplicer", "FieldDoctor"};
-    cout << "let's play a game called Pandemic!" << endl;
-    cout << "every player need to choose his role in the game from the list below:" << endl;
-    for (uint i = 0; i < roles.size(); i++) {
-        cout << "- " << roles[i] << endl;
-    }
-    
-    string tmp;
-    Dispatcher player {board, City::Algiers};
-    while (true) {
-        cout << "\nPlease pick a role from the list above: " << endl;
-        string x;
-        cin >> x;
-        tmp = x;
-        if (tmp == "Dispatcher") {
-            Dispatcher player {board, City::Algiers};
-            break;
-        }
-        else if (tmp == "Scientist") {
-            Scientist player {board, City::Algiers, 4};
-            break;
-        }
-        else if (tmp == "Researcher") {
-            Researcher player {board, City::Algiers};
-            break;
-        }
-        else if (tmp == "Medic") {
-            Medic player {board, City::Algiers};
-            break;
-        }
-        else if (tmp == "Virologist") {
-            Virologist player {board, City::Algiers};
-            break;
-        }
-        else if (tmp == "GeneSplicer") {
-            GeneSplicer player {board, City::Algiers};
-            break;
-        }
-        else if (tmp == "FieldDoctor") {
-            FieldDoctor player {board, City::Algiers};
-            break;
-        }
-        else {
-            cout << "You didn't choose a player from the list, please try again." << endl;
-        }
-    }
-    cout << "You chose to be: " << tmp << endl;
-    what_role(tmp);
+    Medic medic{board, City::Algiers};
+
+    cout << "Let's play a game called" << BOLDMAGENTA << " Pandemic!" << RESET << endl;
+    cout << "Your player is a Medic!" << endl;
+    cout << "You have a special skill - You can treat all the disease cubes from the city you're in," <<
+            " or if the Color of the city is cured," << 
+            " then you can treat the city just by going (drive / fly) there!" << endl;
 
     cout << "\n\nLet's start the game!" << endl;
     cout << "Your player is in Algiers" << endl;
-    cout << "These are the cities you can travel in:\n" << endl;
+    board[City::Istanbul] = 3;
+    board[City::Karachi] = 2;
+    board[City::Algiers] = 1;
+    cout << "Istanbul has 3 disease cubes, Karachi has 2 and Algiers has one." << endl;
+    cout << "You need to cure those cities to win the game!" << endl;
+    cout << "\nThese are the cities you can travel in:\n" << endl;
     cities_num();
     cout << "Now, what would you like to do?" << endl;
     vector<string> options {"Take_card - Take card from the packet",
@@ -99,13 +66,15 @@ int main () {
         cout << "- " << options[i] << endl;
     }
 
-    cout << "\nPlease pick an action from the list above: " << endl;
-    string act;
     while (true) {
             try {
+                cout << "\nPlease pick an action from the list above: " << endl;
                 string act;
-                take_action(player, act);
-                break;
+                take_action(&medic, act);
+                if (board.is_clean()) {
+                    cout << "\n" << GREEN << "YOU WIN!!!" << RESET << endl;
+                    exit(0);
+                }
             }
             catch (const invalid_argument &invalid) {
                 cout << "Exception: " << RED << invalid.what() << RESET << endl;
@@ -115,33 +84,14 @@ int main () {
                 cout << "Exception: " << RED << e.what() << RESET << endl;
                 cout << "Something went wrong, please try again." << endl;
             }
+
+            // if (board.is_clean()) {
+            //     cout << "\n" << GREEN << "YOU WIN!!!" << RESET << endl;
+            //     exit(0);
+            // }
         }
 
     return 0;
-}
-
-void what_role(string rol) {
-    if (rol == "Dispatcher") {
-            cout << rol << " - Special skill is: If the Dispatcher is at a research station, he is able to fly direct to any city without dropping a card";
-    }
-    else if (rol == "Scientist") {
-        cout << rol << " - Special skill is: Scientist can discover cure with 4 cards";
-    }
-    else if (rol == "Researcher") {
-        cout << rol << " - Special skill is: Researcher can discover cure without having to be in a reasearch station";
-    }
-    else if (rol == "Medic") {
-        cout << rol << " - Special skill is: Treat all the disease cubes from the city he is in";
-    }
-    else if (rol == "Virologist") {
-        cout << rol << " - Special skill is: Virologist can treat any city in the world by dropping its card";
-    }
-    else if (rol == "GeneSplicer") {
-        cout << rol << " - Special skill is: GeneSplicer can discover cure with any 5 cards (with mixed colors)";
-    }
-    else if (rol == "FieldDoctor") {
-            cout << rol << " - Special skill is: FieldDoctor can treat connected cities as well without dropping a card";
-    }
 }
 
 void take_action(Player& player, string action) {
@@ -153,6 +103,7 @@ void take_action(Player& player, string action) {
             cin >> c;
             City city = int_to_city(c);
             player.take_card(city);
+            countit++;
             break;
         }
         else if (action == "Drive") {
@@ -161,6 +112,7 @@ void take_action(Player& player, string action) {
             cin >> c;
             City city = int_to_city(c);
             player.drive(city);
+            countit++;
             break;
         }
         else if (action == "Fly_direct") {
@@ -169,6 +121,7 @@ void take_action(Player& player, string action) {
             cin >> c;
             City city = int_to_city(c);
             player.fly_direct(city);
+            countit++;
             break;
         }
         else if (action == "Fly_charter") {
@@ -177,6 +130,7 @@ void take_action(Player& player, string action) {
             cin >> c;
             City city = int_to_city(c);
             player.fly_charter(city);
+            countit++;
             break;
         }
         else if (action == "Fly_Shuttle") {
@@ -185,10 +139,12 @@ void take_action(Player& player, string action) {
             cin >> c;
             City city = int_to_city(c);
             player.fly_shuttle(city);
+            countit++;
             break;
         }
         else if (action == "Build") {
             player.build();
+            countit++;
             break;
         }
         else if (action == "Discover_cure") {
@@ -208,6 +164,7 @@ void take_action(Player& player, string action) {
             }
             Color color = (Color)c;
             player.discover_cure(color);
+            countit++;
             break;
         }
         else if (action == "Treat") {
@@ -216,6 +173,7 @@ void take_action(Player& player, string action) {
             cin >> c;
             City city = int_to_city(c);
             player.treat(city);
+            countit++;
             break;
         }
         else {
@@ -282,7 +240,7 @@ City int_to_city(int c) {
     City city;
     while (true) {
         if (c < 0 || c > 48) {
-            cout << "Please chooes a number from 0 to 48 from the list above." << endl;
+            cout << "Please choose a number from 0 to 48 from the list above." << endl;
         }
         else {
             city = (City)c;
