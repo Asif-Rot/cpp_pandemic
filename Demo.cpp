@@ -70,7 +70,7 @@ int main () {
             try {
                 cout << "\nPlease pick an action from the list above: " << endl;
                 string act;
-                take_action(&medic, act);
+                take_action(medic, act);
                 if (board.is_clean()) {
                     cout << "\n" << GREEN << "YOU WIN!!!" << RESET << endl;
                     exit(0);
